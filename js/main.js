@@ -37,6 +37,13 @@ $(document).ready(function(){
   $('.start_view').show();
   $('.game_view').hide();
   $('.create').hide();
+  count = Number(localStorage.getItem("challenge_count"));
+  $(".challenge span").html(count);
+  success_count = Number(localStorage.getItem("success_count"));
+  $(".point span").html(success_count);
+  bonus_count = Number(localStorage.getItem("bonus_count"));
+  carrot_count = Number(localStorage.getItem("carrot_count"));
+  $(".carrot_list li:nth-child(-n+"+carrot_count+")").css("visibility","visible");
   $(".start,.continue").on("click",function(){
     question();
     $('.start_view').slideUp('slow');
@@ -45,10 +52,18 @@ $(document).ready(function(){
 });
 
 $(".start").on("click",function(){
+  //記録の初期化
   localStorage.setItem("challenge_count",0);
   localStorage.setItem("success_count",0);
   localStorage.setItem("bonus_count",0);
   localStorage.setItem("carrot_count",0);
+  count = 0;
+  success_count = 0;
+  bonus_count = 0;
+  carrot_count = 0;
+  $(".challenge span").html(0);
+  $(".point span").html(0);
+  $(".carrot_list li").css("visibility","hidden");
 })
 
 $(".continue").on("click",function(){
@@ -183,6 +198,8 @@ $(".answer").on("click",function(){
   //チャレンジした回数を増やして表示
   count += 1;
   $(".challenge span").html(count);
+  //回答数をローカルストレージに保存
+  localStorage.setItem("challenge_count",count);
   //問題の音の数と回答した音の数があっているか
   if(ary.length != q_chord.length){
     mistake();
@@ -206,8 +223,7 @@ $(".answer").on("click",function(){
   }
   ary = [];
   $(".input").html("");
-  //回答数、正解数、ボーナスカウントをローカルストレージに保存
-  localStorage.setItem("challenge_count",count);
+  //正解数、ボーナスカウントをローカルストレージに保存
   localStorage.setItem("success_count",success_count);
   localStorage.setItem("bonus_count",bonus_count);
   localStorage.setItem("carrot_count",carrot_count);
@@ -252,6 +268,7 @@ function mistake() {
     }
   });
   bonus_count = 0;
+  localStorage.setItem("bonus_count",bonus_count);
 }
 
 function success() {
